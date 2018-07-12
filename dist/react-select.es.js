@@ -838,6 +838,14 @@ var Select$1 = function (_React$Component) {
 	}, {
 		key: 'handleTouchOutside',
 		value: function handleTouchOutside(event) {
+			// check if parent specified prop `eventComesFromMenu`
+			if (typeof this.props.eventComesFromMenu === 'function' || this.props.eventComesFromMenu instanceof Function) {
+				if (this.props.eventComesFromMenu(event) === true) {
+					this.closeMenu();
+				}
+				return;
+			}
+
 			// handle touch outside on ios to dismiss menu
 			if (this.wrapper && !this.wrapper.contains(event.target)) {
 				this.closeMenu();
@@ -1976,6 +1984,7 @@ Select$1.propTypes = {
 	style: PropTypes.object, // optional style to apply to the control
 	tabIndex: stringOrNumber, // optional tab index of the control
 	tabSelectsValue: PropTypes.bool, // whether to treat tabbing out while focused to be value selection
+	eventComesFromMenu: PropTypes.func, // eventComesFromMenu: function (event) {return true;}. Optional function for deciding if touchstart event is on the select component or not
 	trimFilter: PropTypes.bool, // whether to trim whitespace around filter value
 	value: PropTypes.any, // initial field value
 	valueComponent: PropTypes.func, // value component to render
@@ -2025,6 +2034,7 @@ Select$1.defaultProps = {
 	searchable: true,
 	simpleValue: false,
 	tabSelectsValue: true,
+	eventComesFromMenu: undefined,
 	trimFilter: true,
 	valueComponent: Value,
 	valueKey: 'value'
